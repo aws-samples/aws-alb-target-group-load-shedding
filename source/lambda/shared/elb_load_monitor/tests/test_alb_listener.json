@@ -1,0 +1,81 @@
+{
+    "Rules": [
+        {
+            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/9758a586f4921acf",
+            "Priority": "1",
+            "Conditions": [
+                {
+                    "Field": "path-pattern",
+                    "Values": [
+                        "project"
+                    ],
+                    "PathPatternConfig": {
+                        "Values": [
+                            "project"
+                        ]
+                    }
+                }
+            ],
+            "Actions": [
+                {
+                    "Type": "forward",
+                    "ForwardConfig": {
+                        "TargetGroups": [
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/TestGroup/1566e30628006197",
+                                "Weight": 0
+                            },
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/AppServerATG/090a4ba28ada9d48",
+                                "Weight": 100
+                            }
+                        ],
+                        "TargetGroupStickinessConfig": {
+                            "Enabled": false
+                        }
+                    }
+                }
+            ],
+            "IsDefault": false
+        },
+        {
+            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/51558e3cbb5f8612",
+            "Priority": "default",
+            "Conditions": [],
+            "Actions": [
+                {
+                    "Type": "forward",
+                    "Order": 1,
+                    "ForwardConfig": {
+                        "TargetGroups": [
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/TestGroup/1566e30628006197",
+                                "Weight": 0
+                            },
+                            {
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/AppServerATG/090a4ba28ada9d48",
+                                "Weight": 100
+                            }
+                        ],
+                        "TargetGroupStickinessConfig": {
+                            "Enabled": false
+                        }
+                    }
+                }
+            ],
+            "IsDefault": true
+        }
+    ],
+    "ResponseMetadata": {
+        "RequestId": "ceaa7400-2e96-4e70-b7e6-ebacacacfdd0",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "ceaa7400-2e96-4e70-b7e6-ebacacacfdd0",
+            "content-type": "text/xml",
+            "content-length": "2873",
+            "vary": "accept-encoding",
+            "date": "Wed,26 May 2021 21: 46: 07 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}
