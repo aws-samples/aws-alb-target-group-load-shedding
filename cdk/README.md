@@ -22,6 +22,10 @@ or
 
 The scripts will update the Lambda function zip file or Lambda layer zip file respectively.
 
+To prepare your environment for CDK usage, run 
+
+    cdk bootstrap -c elbTargetGroupArn="arn:aws:elasticloadbalancing:SOME_REGION:SOME_ACCOUNT_NUM:targetgroup/AppServerATG/090a4ba28ada9d48"
+
 To synthesize the CloudFormation templates:
 
     cdk synth -c elbTargetGroupArn="arn:aws:elasticloadbalancing:SOME_REGION:SOME_ACCOUNT_NUM:targetgroup/AppServerATG/090a4ba28ada9d48"
