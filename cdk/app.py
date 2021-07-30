@@ -9,13 +9,14 @@ from aws_cdk import core as cdk
 # being updated to use `cdk`.  You may delete this import if you don't need it.
 from aws_cdk import core
 
-from cdk.alb_monitor_stack import ALBMonitorStack, ALBCloudWatchStack
-
+from cdk.alb_monitor_stack import ALBMonitorStack
+from cdk.alb_cloudwatch_stack import ALBCloudWatchStack
 
 app = core.App()
 
+
 alb_monitor_stack = ALBMonitorStack(app, "ALBMonitorStack")
-ALBCloudWatchStack(app, 'ALBCloudWatchStack',
-                   alb_monitor_stack.alb_alarm_lambda)
+
+alb_cloudwatch_stack = ALBCloudWatchStack(app, 'ALBCloudWatchStack')
 
 app.synth()

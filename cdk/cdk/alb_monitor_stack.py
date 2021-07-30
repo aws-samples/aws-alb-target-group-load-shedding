@@ -35,6 +35,7 @@ class ALBMonitorStack(cdk.Stack):
             self, 'restoreMesgDelaySec', type='Number', description='Number of seconds to delay restore messages',
             min_value=60, max_value=300, default=120)
 
+        # Queue used to monitor the ALB
         queue = aws_sqs.Queue(scope=self, id='alb_target_group_monitor_queue')
 
         # This policy allows sending messages to SQS.
@@ -49,13 +50,15 @@ class ALBMonitorStack(cdk.Stack):
             ]
         }
 
+        # Create the policy document for the Queue from the JSON
         send_sqs_policy_document = aws_iam.PolicyDocument.from_json(
             send_sqs_json)
 
         # todo need to refine permissions
         # do not need full SQS access. Only require LambdaSQSQueueExecuteRole + queue send permissions
         lambda_execution_role = aws_iam.Role(
-            self, 'ALB_Lambda_Role', assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
+            self, 'ALB_Lambda_Role', 
+            assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
             description='Role assumed by ALB monitoring lambdas',
             managed_policies=[
                 aws_iam.ManagedPolicy.from_managed_policy_arn(
@@ -74,11 +77,15 @@ class ALBMonitorStack(cdk.Stack):
             inline_policies=[send_sqs_policy_document]
         )
 
+        # Code for Lambda function will will monitor load on the ELB
         layer_code = aws_lambda.AssetCode(path=str(pathlib.Path(
             __file__).parent.parent/'resources/lambda_layer/elb_load_monitor.zip'))
 
+        # Lambda ZIP archive with additional code for ALB Monitoring
         elb_monitor_layer = aws_lambda.LayerVersion(
-            self, 'ALBMonitorLayer', description='ALBMonitoring Layer',
+            self, 
+            'ALBMonitorLayer', 
+            description='ALBMonitoring Layer',
             layer_version_name='ALBMonitorLayer',
             compatible_runtimes=[
                 aws_lambda.Runtime.PYTHON_3_7, aws_lambda.Runtime.PYTHON_3_8
@@ -92,7 +99,10 @@ class ALBMonitorStack(cdk.Stack):
             __file__).parent.parent/'resources/lambda/alb_alarm_lambda_handler.zip'))
 
         self.alb_alarm_lambda = aws_lambda.Function(
-            self, 'ALBAlarmLambda', code=alarm_lambda_code, handler='alb_alarm_lambda_handler.lambda_handler',
+            self, 
+            'ALBAlarmLambda', 
+            code=alarm_lambda_code, 
+            handler='alb_alarm_lambda_handler.lambda_handler',
             function_name='ALBAlarmLambda',
             runtime=aws_lambda.Runtime.PYTHON_3_8, description='Lambda Handler for ALB Alarms',
             environment={
@@ -105,80 +115,37 @@ class ALBMonitorStack(cdk.Stack):
                 'SHED_MESG_DELAY_SEC': shed_mesg_delay_sec_parameter.value_as_string,
                 'RESTORE_MESG_DELAY_SEC': restore_mesg_delay_sec_parameter.value_as_string
             },
-            layers=[elb_monitor_layer], memory_size=128,
+            layers=[elb_monitor_layer], 
+            memory_size=128,
             role=lambda_execution_role
         )
 
+        # The code for the ALB Alarm Check Queue Lambda
         queue_lambda_code = aws_lambda.AssetCode(path=str(pathlib.Path(
             __file__).parent.parent/'resources/lambda/alb_alarm_check_lambda_handler.zip'))
 
+        # Create the Lambda function from the 
         alb_sqs_alarm_lambda = aws_lambda.Function(
-            self, 'ALBSQSMessageLambda', code=queue_lambda_code, handler='alb_alarm_check_lambda_handler.lambda_handler',
+            self, 
+            'ALBSQSMessageLambda', 
+            code=queue_lambda_code, 
+            handler='alb_alarm_check_lambda_handler.lambda_handler',
             function_name='ALBSQSMessageLambda',
-            runtime=aws_lambda.Runtime.PYTHON_3_8, description='Lambda Handler for SQS Messages from ALB Monitor',
-            layers=[elb_monitor_layer], memory_size=128,
+            runtime=aws_lambda.Runtime.PYTHON_3_8, 
+            description='Lambda Handler for SQS Messages from ALB Monitor',
+            layers=[elb_monitor_layer], 
+            memory_size=128,
             role=lambda_execution_role
         )
 
         alb_sqs_alarm_lambda.add_event_source(
             aws_lambda_event_sources.SqsEventSource(queue))
 
+        cdk.CfnOutput(
+            self, 'cwAlarmLambdaArn', value=alb_sqs_alarm_lambda.function_arn)
+    
+    @property
+    def alarm_lambda(self) -> aws_lambda.IFunction:
+        return self.alb_alarm_lambda
 
-class ALBCloudWatchStack(cdk.Stack):
 
-    def __init__(
-        self, scope: cdk.Construct, construct_id: str, alb_alarm_lambda: aws_lambda.IFunction, **kwargs
-    ) -> None:
-        super().__init__(scope, construct_id, **kwargs)
-
-        elb_target_group_arn = self.node.try_get_context('elbTargetGroupArn')
-
-        if elb_target_group_arn is None:
-            raise ValueError(
-                'Must specify context parameter elbTargetGroupArn. Usage: cdk <COMMAND> -c elbTargetGroupArn ' +
-                '<ELB_TARGET_GROUP_ARN>')
-
-        target_group_dimension = elb_target_group_arn[elb_target_group_arn.find(
-            'targetgroup'):len(elb_target_group_arn)]
-
-        cw_alarm_namespace = core.CfnParameter(
-            self, 'cwAlarmNamespace', type='String', description='Namespace for alarm metric', default='AWS/ApplicationELB')
-        cw_alarm_metric_name = core.CfnParameter(
-            self, 'cwAlarmMetricName', type='String', description='Metric to use for alarm', default='RequestCountPerTarget')
-        # Cannot use CfnParameter due to issue with CDK construct validation. Metric construct requires value to
-        # be a specific value (e.g. sum, average, etc) as opposed to a value pulled from CfnParameter
-        #
-        # cw_alarm_metric_stat = core.CfnParameter(
-        #    self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='Sum')
-        cw_alarm_threshold = core.CfnParameter(
-            self, 'cwAlarmThreshold', type='Number', description='Threshold for alarm', default=500)
-        cw_alarm_periods = core.CfnParameter(
-            self, 'cwAlarmPeriods', type='Number', description='Num of periods for alarm', default=3)
-
-        # The evaluation period for the alarm will be 60s/1m.
-        request_count_per_target_metric = aws_cloudwatch.Metric(
-            namespace=cw_alarm_namespace.value_as_string,
-            metric_name=cw_alarm_metric_name.value_as_string,
-            dimensions={
-                "TargetGroup": target_group_dimension
-            },
-            statistic='sum',
-            period=cdk.Duration.minutes(1)
-        )
-
-        cw_alarm = aws_cloudwatch.Alarm(
-            self, 'ALBTargetGroupAlarm', alarm_name='ALBTargetGroupAlarm',
-            alarm_description='Alarm for RequestCountPerTarget',
-            metric=request_count_per_target_metric, threshold=cw_alarm_threshold.value_as_number,
-            evaluation_periods=cw_alarm_periods.value_as_number,
-            comparison_operator=aws_cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD)
-
-        event_rule = aws_events.Rule(
-            self, 'ALBTargetGroupAlarmEventRule', rule_name='ALBTargetGroupAlarmEventRule',
-            description='EventBridge rule for ALB target')
-
-        event_rule.add_event_pattern(
-            source=['aws.cloudwatch'], detail_type=['CloudWatch Alarm State Change'], resources=[cw_alarm.alarm_arn])
-
-        event_rule.add_target(
-            aws_events_targets.LambdaFunction(handler=alb_alarm_lambda))
