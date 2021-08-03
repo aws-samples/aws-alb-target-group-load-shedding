@@ -60,7 +60,7 @@ Provide the appropriate parameter values. The follow parameters are required:
 The following parameters are optional:
     cwAlarmNamespace - The namespace for the CloudWatch (CW) metric (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/viewing_metrics_with_cloudwatch.html). Default: AWS/ApplicationELB
     cwAlarmMetricName - The name of the CW metric. Default: RequestCountPerTarget
-    cwAlarmMetricStat - Function to use for aggregating the statistic. Default: Average
+    cwAlarmMetricStat - Function to use for aggregating the statistic. Default: Sum
     cwAlarmThreshold - Threshold value that triggers an alarm for the metric. Default: 500
     cwAlarmPeriods - The evaluation period for the alarm. Default: 3.
 
