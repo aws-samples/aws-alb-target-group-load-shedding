@@ -6,7 +6,7 @@ This is the Python CDK for the ALB Target Group Load Shedding project. Please co
 Make sure you update the CDK and also install the appropriate Python libraries by running
     
     npm install -g aws-cdk
-    python -m pip install -r requirements.txt
+    python3 -m pip install -r requirements.txt
 
 
 The project contains 2 Stacks:
