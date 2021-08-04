@@ -33,16 +33,18 @@ class ALBCloudWatchStack(cdk.Stack):
             self, 'cwAlarmNamespace', type='String', description='Namespace for alarm metric', default='AWS/ApplicationELB')
         cw_alarm_metric_name = core.CfnParameter(
             self, 'cwAlarmMetricName', type='String', description='Metric to use for alarm', default='RequestCountPerTarget')
-        # Cannot use CfnParameter due to issue with CDK construct validation. Metric construct requires value to
-        # be a specific value (e.g. sum, average, etc) as opposed to a value pulled from CfnParameter
-        #
-        # cw_alarm_metric_stat = core.CfnParameter(
-        #    self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='Sum')
+        cw_alarm_metric_stat = core.CfnParameter(
+            self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='sum')
         cw_alarm_threshold = core.CfnParameter(
             self, 'cwAlarmThreshold', type='Number', description='Threshold for alarm', default=500)
         cw_alarm_periods = core.CfnParameter(
             self, 'cwAlarmPeriods', type='Number', description='Num of periods for alarm', default=3)
 
+        # Fixing the parameter for cwAlarmMetricStat. At synth time, this value is $
+        alarm_metric_stat = cw_alarm_metric_stat.value_as_string
+        if cw_alarm_metric_stat.value_as_string.count("Token") > 0:
+            alarm_metric_stat = 'sum'
+        
         # The evaluation period for the alarm will be 60s/1m.
         request_count_per_target_metric = aws_cloudwatch.Metric(
             namespace=cw_alarm_namespace.value_as_string,
@@ -50,14 +52,16 @@ class ALBCloudWatchStack(cdk.Stack):
             dimensions={
                 "TargetGroup": target_group_dimension
             },
-            statistic='sum',
+            statistic=alarm_metric_stat,
             period=cdk.Duration.minutes(1)
         )
 
         cw_alarm = aws_cloudwatch.Alarm(
-            self, 'ALBTargetGroupAlarm', alarm_name='ALBTargetGroupAlarm',
+            self, 'ALBTargetGroupAlarm', 
+            alarm_name='ALBTargetGroupAlarm',
             alarm_description='Alarm for RequestCountPerTarget',
-            metric=request_count_per_target_metric, threshold=cw_alarm_threshold.value_as_number,
+            metric=request_count_per_target_metric, 
+            threshold=cw_alarm_threshold.value_as_number,
             evaluation_periods=cw_alarm_periods.value_as_number,
             comparison_operator=aws_cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD)
 
