@@ -121,14 +121,14 @@ class ALBMonitorStack(cdk.Stack):
         )
 
         # The code for the ALB Alarm Check Queue Lambda
-        queue_lambda_code = aws_lambda.AssetCode(path=str(pathlib.Path(
+        alb_sqs_message_lambda_code = aws_lambda.AssetCode(path=str(pathlib.Path(
             __file__).parent.parent/'resources/lambda/alb_alarm_check_lambda_handler.zip'))
 
         # Create the Lambda function from the 
-        alb_sqs_alarm_lambda = aws_lambda.Function(
+        alb_sqs_message_lambda = aws_lambda.Function(
             self, 
             'ALBSQSMessageLambda', 
-            code=queue_lambda_code, 
+            code=alb_sqs_message_lambda_code, 
             handler='alb_alarm_check_lambda_handler.lambda_handler',
             function_name='ALBSQSMessageLambda',
             runtime=aws_lambda.Runtime.PYTHON_3_8, 
@@ -138,11 +138,11 @@ class ALBMonitorStack(cdk.Stack):
             role=lambda_execution_role
         )
 
-        alb_sqs_alarm_lambda.add_event_source(
+        alb_sqs_message_lambda.add_event_source(
             aws_lambda_event_sources.SqsEventSource(queue))
 
         cdk.CfnOutput(
-            self, 'cwAlarmLambdaArn', value=alb_sqs_alarm_lambda.function_arn)
+            self, 'cwAlarmLambdaArn', value=self.alb_alarm_lambda.function_arn)
     
     @property
     def alarm_lambda(self) -> aws_lambda.IFunction:
