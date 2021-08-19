@@ -45,7 +45,7 @@ Provide the appropriate parameter values. The follow parameters are required:
 
 The following parameters are optional:
     elbShedPercent - Percentage to shed expressed as an integer. Default: 5
-    maxElbShedPercent - aximum allowable load to shed from ELB. Default: 100
+    maxElbShedPercent - Maximum allowable load to shed from ELB. Default: 100
     elbRestorePercent - Percentage to restore expressed as an integer. Default: 5
     shedMesgDelaySec - Number of seconds to delay shed messages. Default: 60
     restoreMesgDelaySec - Number of seconds to delay restore messages. Default: 120
