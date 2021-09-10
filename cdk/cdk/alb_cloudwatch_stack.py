@@ -80,3 +80,13 @@ class ALBCloudWatchStack(cdk.Stack):
 
         event_rule.add_target(
             aws_events_targets.LambdaFunction(alb_sqs_alarm_lambda))
+
+        aws_lambda.CfnPermission(
+            self,
+            "eventRule",
+            action="lambda:InvokeFunction",
+            function_name=cw_alarm_lambda_arn.value_as_string,
+            principal="apigateway.amazonaws.com",
+            source_arn= event_rule.rule_arn
+        )
+
