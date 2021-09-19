@@ -10,13 +10,9 @@ from aws_cdk import core as cdk
 from aws_cdk import core
 
 from cdk.alb_monitor_stack import ALBMonitorStack
-from cdk.alb_cloudwatch_stack import ALBCloudWatchStack
 
 app = core.App()
 
-
 alb_monitor_stack = ALBMonitorStack(app, "ALBMonitorStack")
-
-alb_cloudwatch_stack = ALBCloudWatchStack(app, 'ALBCloudWatchStack')
 
 app.synth()
