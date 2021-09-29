@@ -29,16 +29,16 @@ To deploy the ALBMonitorStack:
 
 Provide the appropriate parameter values. The follow parameters are required:
 
-- elbTargetGroupArn - ARN for the ALB's Primary Target Group
 - elbArn - ARN for the Application Load Balancer (ALB) to monitor
+- elbTargetGroupArn - ARN for the ALB's Primary Target Group
 - elbListenerARN - ARN for the ALB Listener to update for shedding/restoring
 
 The following parameters are optional:
-- elbShedPercent - Percentage to shed expressed as an integer. Default: 5
-- maxElbShedPercent - Maximum allowable load to shed from ELB. Default: 100
-- elbRestorePercent - Percentage to restore expressed as an integer. Default: 5
-- shedMesgDelaySec - Number of seconds to delay shed messages. Default: 60
-- restoreMesgDelaySec - Number of seconds to delay restore messages. Default: 120
+- elbShedPercent - Percentage of traffic to load shed expressed as an integer. Default: 5
+- elbRestorePercent - Percentage of traffic to restore expressed as an integer. Default: 5
+- maxElbShedPercent - Maximum allowable load to shed from Primary Target Group to Shedding Target Group. Default: 100
+- shedMesgDelaySec - Time delay in seconds between Shed intervals expressed as an integer. Default: 60
+- restoreMesgDelaySec - Time delay in seconds between Restore intervals. Default: 120
 - cwAlarmNamespace - The namespace for the CloudWatch (CW) metric (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/viewing_metrics_with_cloudwatch.html). Default: AWS/ApplicationELB
 - cwAlarmMetricName - The name of the CW metric. Default: RequestCountPerTarget
 - cwAlarmMetricStat - Function to use for aggregating the statistic. Can be one of the following: - "Minimum" | "min" - "Maximum" | "max" - "Average" | "avg" - "Sum" | "sum" - "SampleCount | "n" - "pNN.NN" Default: sum
