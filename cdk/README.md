@@ -34,7 +34,7 @@ Provide the appropriate parameter values. The follow parameters are required:
 - elbListenerARN - ARN for the ALB Listener to update for shedding/restoring
 
 The following parameters are optional:
-- elbShedPercent - Percentage of traffic to load shed expressed as an integer. Default: 5
+- elbShedPercent - Percentage of traffic to shed expressed as an integer. Default: 5
 - elbRestorePercent - Percentage of traffic to restore expressed as an integer. Default: 5
 - maxElbShedPercent - Maximum allowable load to shed from Primary Target Group to Shedding Target Group. Default: 100
 - shedMesgDelaySec - Time delay in seconds between Shed intervals expressed as an integer. Default: 60
