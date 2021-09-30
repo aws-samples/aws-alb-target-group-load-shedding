@@ -59,44 +59,59 @@ class ALBMonitorStack(cdk.Stack):
         # Queue used to monitor the ALB
         queue = aws_sqs.Queue(scope=self, id='alb_target_group_monitor_queue')
 
-        # This policy allows sending messages to SQS.
-        send_sqs_json = {
+        # This policy allows create logs and put logs
+        inline_policy_json_logs = {
             'Version': '2012-10-17',
             'Statement': [
                 {
-                    'Effect': 'Allow',
-                    'Action': 'sqs:SendMessage',
-                    'Resource': queue.queue_arn
+                    "Effect": "Allow",
+                    "Action": [
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
+                    ],
+                    "Resource": "*"
                 }
             ]
         }
 
-        # Create the policy document for the Queue from the JSON
-        send_sqs_policy_document = aws_iam.PolicyDocument.from_json(
-            send_sqs_json)
+        #This policy allows sending messages to SQS on a single queue
+        inline_policy_json_sqs ={
+            'Version': '2012-10-17',
+            'Statement': [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        'sqs:SendMessage',
+                        "sqs:ReceiveMessage",
+                        "sqs:DeleteMessage",
+                        "sqs:GetQueueAttributes",
+                        "sqs:ChangeMessageVisibility",
+                        "sqs:GetQueueUrl"
+                    ],
+                    "Resource": queue.queue_arn
+                }
+            ]
+        }
 
-        # todo need to refine permissions
-        # do not need full SQS access. Only require LambdaSQSQueueExecuteRole + queue send permissions
-        lambda_execution_role = aws_iam.Role(
-            self, 'ALB_Lambda_Role', 
+
+        alarm_lambda_execution_role = aws_iam.Role(
+            self, 'ALBAlarmLambdaRole', 
             assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
             description='Role assumed by ALB monitoring lambdas',
             managed_policies=[
                 aws_iam.ManagedPolicy.from_managed_policy_arn(
-                    self, id='lambda_execute',
-                    managed_policy_arn='arn:aws:iam::aws:policy/AWSLambdaExecute'),
-                aws_iam.ManagedPolicy.from_managed_policy_arn(
-                    self, id='lambda_sqs_execute',
-                    managed_policy_arn='arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole'),
-                aws_iam.ManagedPolicy.from_managed_policy_arn(
                     self, id='cloud_watch_read',
                     managed_policy_arn='arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess'),
                 aws_iam.ManagedPolicy.from_managed_policy_arn(
-                    self, id='elb_read',
+                    self, id='elb_full',
                     managed_policy_arn='arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess')
             ],
-            inline_policies=[send_sqs_policy_document]
+            inline_policies=[
+                aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
+                aws_iam.PolicyDocument.from_json(inline_policy_json_logs)]
         )
+
 
         # Code for Lambda function will will monitor load on the ELB
         layer_code = aws_lambda.AssetCode(path=str(pathlib.Path(
@@ -138,7 +153,7 @@ class ALBMonitorStack(cdk.Stack):
             },
             layers=[elb_monitor_layer], 
             memory_size=128,
-            role=lambda_execution_role
+            role=alarm_lambda_execution_role
         )
         
         # Create the Event Rule
@@ -159,6 +174,24 @@ class ALBMonitorStack(cdk.Stack):
             source_arn= event_rule.rule_arn
         )
 
+        # The role for the ALB Alarm Check Queue Lambda
+        sqs_message_lambda_execution_role = aws_iam.Role(
+            self, 'ALBSQSMessageLambdaRole', 
+            assumed_by=aws_iam.ServicePrincipal('lambda.amazonaws.com'),
+            description='Role assumed by ALB SQS Message Lambda',
+            managed_policies=[
+                aws_iam.ManagedPolicy.from_managed_policy_arn(
+                    self, id='cloud_watch_read2',
+                    managed_policy_arn='arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess'),
+                aws_iam.ManagedPolicy.from_managed_policy_arn(
+                    self, id='elb_full2',
+                    managed_policy_arn='arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess')
+            ],
+            inline_policies=[
+                aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
+                aws_iam.PolicyDocument.from_json(inline_policy_json_logs)]
+        )
+
         # The code for the ALB Alarm Check Queue Lambda
         alb_sqs_message_lambda_code = aws_lambda.AssetCode(path=str(pathlib.Path(
             __file__).parent.parent/'resources/lambda/alb_alarm_check_lambda_handler.zip'))
@@ -174,7 +207,7 @@ class ALBMonitorStack(cdk.Stack):
             description='Lambda Handler for SQS Messages from ALB Monitor',
             layers=[elb_monitor_layer], 
             memory_size=128,
-            role=lambda_execution_role
+            role=sqs_message_lambda_execution_role
         )
 
         alb_sqs_message_lambda.add_event_source(
