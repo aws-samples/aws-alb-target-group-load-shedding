@@ -48,7 +48,7 @@ class ALBMonitorStack(cdk.Stack):
         cw_alarm_metric_name = core.CfnParameter(
             self, 'cwAlarmMetricName', type='String', description='Metric to use for alarm', default='TargetResponseTime')
         cw_alarm_metric_stat = core.CfnParameter(
-            self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='averge')
+            self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='average')
         cw_alarm_threshold = core.CfnParameter(
             self, 'cwAlarmThreshold', type='Number', description='Threshold for alarm', default=1)
         cw_alarm_periods = core.CfnParameter(
