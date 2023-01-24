@@ -15,7 +15,7 @@ class ALBMonitorStack(cdk.Stack):
     def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        elb_target_group_arn = self.node.try_get_context('elbTargetGroupArn')
+        elb_target_group_arn = self.node.try_get_context('arn:aws:elasticloadbalancing:ap-south-1:661143522137:targetgroup/fkhp-prod-new-msite-tg-as1/d0daea7333f59341')
 
         if elb_target_group_arn is None:
             raise ValueError(
@@ -23,18 +23,18 @@ class ALBMonitorStack(cdk.Stack):
                 '<ELB_TARGET_GROUP_ARN>')
 
         elb_arn_parameter = core.CfnParameter(
-            self, 'elbArn', type='String', description='ARN for ELB')
+            self, 'elbArn', type='String', description='ARN for ELB', default='arn:aws:elasticloadbalancing:ap-south-1:661143522137:loadbalancer/app/healthplus-flipkartcom-web/12ec89d83502ace9')
         elb_listener_arn_parameter = core.CfnParameter(
-            self, 'elbListenerArn', type='String', description='ARN for ELB listener')
+            self, 'elbListenerArn', type='String', description='ARN for ELB listener', default='arn:aws:elasticloadbalancing:ap-south-1:661143522137:listener/app/healthplus-flipkartcom-web/12ec89d83502ace9/a89018d096aa7035')
         elb_shed_percent_parameter = core.CfnParameter(
             self, 'elbShedPercent', type='Number', description='Percentage to shed expressed as an integer',
-            min_value=0, max_value=100, default=5)
+            min_value=0, max_value=90, default=5)
         max_elb_shed_percent_parameter = core.CfnParameter(
             self, 'maxElbShedPercent', type='Number', description='Maximum allowable load to shed from ELB',
-            min_value=0, max_value=100, default=100)
+            min_value=0, max_value=90, default=90)
         elb_restore_percent_parameter = core.CfnParameter(
             self, 'elbRestorePercent', type='Number', description='Percentage to restore expressed as an integer',
-            min_value=0, max_value=100, default=5)
+            min_value=0, max_value=90, default=5)
         shed_mesg_delay_sec_parameter = core.CfnParameter(
             self, 'shedMesgDelaySec', type='Number', description='Number of seconds to delay shed messages',
             min_value=60, max_value=300, default=60)
@@ -46,13 +46,13 @@ class ALBMonitorStack(cdk.Stack):
         cw_alarm_namespace = core.CfnParameter(
             self, 'cwAlarmNamespace', type='String', description='Namespace for alarm metric', default='AWS/ApplicationELB')
         cw_alarm_metric_name = core.CfnParameter(
-            self, 'cwAlarmMetricName', type='String', description='Metric to use for alarm', default='RequestCountPerTarget')
+            self, 'cwAlarmMetricName', type='String', description='Metric to use for alarm', default='TargetResponseTime')
         cw_alarm_metric_stat = core.CfnParameter(
-            self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='sum')
+            self, 'cwAlarmMetricStat', type='String', description='Statistic for the alarm e.g. sum, averge', default='averge')
         cw_alarm_threshold = core.CfnParameter(
-            self, 'cwAlarmThreshold', type='Number', description='Threshold for alarm', default=500)
+            self, 'cwAlarmThreshold', type='Number', description='Threshold for alarm', default=1)
         cw_alarm_periods = core.CfnParameter(
-            self, 'cwAlarmPeriods', type='Number', description='Num of periods for alarm', default=3)
+            self, 'cwAlarmPeriods', type='Number', description='Num of periods for alarm', default=2)
 
 
 
@@ -223,7 +223,7 @@ class ALBMonitorStack(cdk.Stack):
         # Fixing the parameter for cwAlarmMetricStat. At synth time, this value is $
         alarm_metric_stat = cw_alarm_metric_stat.value_as_string
         if cw_alarm_metric_stat.value_as_string.count("Token") > 0:
-            alarm_metric_stat = 'sum'
+            alarm_metric_stat = 'average'
         
         # The evaluation period for the alarm will be 60s/1m.
         request_count_per_target_metric = aws_cloudwatch.Metric(
