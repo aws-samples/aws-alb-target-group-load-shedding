@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-elbloadmonitor = {file = ".", editable = true}
 attrs = "~=20.3.0"
 python-dateutil = "~=2.8.1"
 jsii = "~=1.29.0"
@@ -14,6 +13,7 @@ six = "~=1.15.0"
 docutils = "~=0.15.2"
 botocore = "~=1.19.29"
 boto3 = "~=1.16.29"
+elbloadmonitor = {file = ".", editable = true}
 
 [dev-packages]
 
