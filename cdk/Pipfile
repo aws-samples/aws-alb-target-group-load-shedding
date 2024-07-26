@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cdk = {file = ".", editable = true}
+"aws-cdk.aws-cloudwatch" = ">=1.107"
+"aws-cdk.aws-iam" = ">=1.107"
+"aws-cdk.aws-events" = ">=1.107"
+"aws-cdk.aws-events-targets" = ">=1.107"
+"aws-cdk.aws-lambda" = ">=1.107"
+"aws-cdk.aws-lambda-event-sources" = ">=1.107"
+"aws-cdk.aws-lambda-python" = ">=1.107"
+"aws-cdk.aws-s3" = ">=1.107"
+"aws-cdk.aws-sqs" = ">=1.107"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
