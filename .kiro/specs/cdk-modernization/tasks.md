@@ -29,20 +29,20 @@
 
 ## Phase 2: Lambda Runtime Update
 
-- [ ] 5. Update Lambda runtime
-  - [ ] 5.1 Change `_lambda.Runtime.PYTHON_3_8` to `_lambda.Runtime.PYTHON_3_12`
-  - [ ] 5.2 Update Lambda layer compatible runtimes to Python 3.11/3.12
-  - [ ] 5.3 Verify Python 3.12 compatibility in Lambda handler code
-  - [ ] 5.4 Verify Python 3.12 compatibility in Lambda layer code
+- [x] 5. Update Lambda runtime *(Completed PR #28)*
+  - [x] 5.1 Change `_lambda.Runtime.PYTHON_3_8` to `_lambda.Runtime.PYTHON_3_13`
+  - [x] 5.2 Update Lambda layer compatible runtimes to Python 3.13
+  - [x] 5.3 Verify Python 3.13 compatibility in Lambda handler code
+  - [x] 5.4 Verify Python 3.13 compatibility in Lambda layer code
 
 ## Phase 3: Dependency Updates
 
-- [ ] 6. Update boto3/botocore
-  - [ ] 6.1 Update `source/lambda/shared/requirements.txt` boto3 to 1.34.0+
-  - [ ] 6.2 Update `source/lambda/shared/requirements.txt` botocore to 1.34.0+
-  - [ ] 6.3 Update `source/lambda/shared/Pipfile` with new versions
-  - [ ] 6.4 Regenerate `source/lambda/shared/Pipfile.lock`
-  - [ ] 6.5 Verify all AWS API calls work with updated SDK
+- [x] 6. Update boto3/botocore *(Completed PR #35)*
+  - [x] 6.1 Update `source/lambda/shared/requirements.txt` boto3 to 1.35.0+
+  - [x] 6.2 Update `source/lambda/shared/requirements.txt` botocore to 1.35.0+
+  - [x] 6.3 Update `source/lambda/shared/Pipfile` with new versions
+  - [x] 6.4 Regenerate `source/lambda/shared/Pipfile.lock`
+  - [x] 6.5 Verify all AWS API calls work with updated SDK
 
 ## Phase 4: Security Improvements
 
@@ -93,11 +93,11 @@
 | Phase | Tasks | Effort | Status |
 |-------|-------|--------|--------|
 | 1 | 1-4 | 4-8h | ⬜ Not Started |
-| 2 | 5 | 1-2h | ⬜ Not Started |
-| 3 | 6 | 2-4h | ⬜ Not Started |
+| 2 | 5 | 1-2h | ✅ Complete (PR #28) |
+| 3 | 6 | 2-4h | ✅ Complete (PR #35) |
 | 4 | 7-9 | 2-4h | ⬜ Not Started |
 | 5 | 10-11 | 4-6h | ⬜ Not Started |
 | 6 | 12 | 2-4h | ⬜ Not Started |
 
-**Total Estimated Effort:** 13-24 hours
-**Total Sub-tasks:** 52
+**Completed:** 9/52 sub-tasks (17%)
+**Remaining Effort:** ~10-18 hours

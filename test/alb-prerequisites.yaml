@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Test ALB infrastructure for CDK v2 Load Shedding validation'
+
+Parameters:
+  VpcId:
+    Type: String
+    Default: vpc-0fe561c883f7f8108
+    Description: VPC ID for ALB
+  
+  SubnetIds:
+    Type: CommaDelimitedList
+    Default: subnet-089b7585d49b2104f,subnet-04ac974c6e9804184
+    Description: Subnet IDs for ALB (minimum 2 AZs)
+
+Resources:
+  # Security Group for ALB
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: alb-test-loadshed-sg
+      GroupDescription: Security group for test ALB
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Purpose
+          Value: CDK-v2-Testing
+        - Key: AutoDelete
+          Value: 'true'
+
+  # Primary Target Group
+  PrimaryTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: alb-test-ptg
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+      HealthCheckEnabled: true
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Tags:
+        - Key: Purpose
+          Value: CDK-v2-Testing
+        - Key: AutoDelete
+          Value: 'true'
+
+  # Shedding Target Group
+  SheddingTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: alb-test-stg
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+      HealthCheckEnabled: true
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Tags:
+        - Key: Purpose
+          Value: CDK-v2-Testing
+        - Key: AutoDelete
+          Value: 'true'
+
+  # Application Load Balancer
+  ApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: alb-test-loadshed
+      Type: application
+      Scheme: internet-facing
+      IpAddressType: ipv4
+      Subnets: !Ref SubnetIds
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+      Tags:
+        - Key: Purpose
+          Value: CDK-v2-Testing
+        - Key: AutoDelete
+          Value: 'true'
+
+  # HTTP Listener with weighted target groups
+  HTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          ForwardConfig:
+            TargetGroups:
+              - TargetGroupArn: !Ref PrimaryTargetGroup
+                Weight: 100
+              - TargetGroupArn: !Ref SheddingTargetGroup
+                Weight: 0
+
+Outputs:
+  ALBArn:
+    Description: Application Load Balancer ARN
+    Value: !Ref ApplicationLoadBalancer
+    Export:
+      Name: !Sub '${AWS::StackName}-ALBArn'
+  
+  ListenerArn:
+    Description: HTTP Listener ARN
+    Value: !Ref HTTPListener
+    Export:
+      Name: !Sub '${AWS::StackName}-ListenerArn'
+  
+  PrimaryTargetGroupArn:
+    Description: Primary Target Group ARN
+    Value: !Ref PrimaryTargetGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-PrimaryTargetGroupArn'
+  
+  SheddingTargetGroupArn:
+    Description: Shedding Target Group ARN
+    Value: !Ref SheddingTargetGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-SheddingTargetGroupArn'
+  
+  ALBDNS:
+    Description: ALB DNS Name
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
