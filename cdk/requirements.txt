@@ -1,12 +1,5 @@
 -e .
-aws-cdk.aws-cloudwatch>=1.107
-aws-cdk.aws-iam>=1.107
-aws-cdk.aws-events>=1.107
-aws-cdk.aws-events-targets>=1.107
-aws-cdk.aws-lambda>=1.107
-aws-cdk.aws-lambda-event-sources>=1.107
-aws-cdk.aws-lambda-python>=1.107
-aws-cdk.aws-s3>=1.107
-aws-cdk.aws-sqs>=1.107
+aws-cdk-lib>=2.170.0
+constructs>=10.0.0
 wheel>=0.38.1
 setuptools>=65.5.1

@@ -19,7 +19,7 @@ This document provides an ordered list of implementation tasks to recreate the A
   - [x] 2.2 Create `cdk/Pipfile` for pipenv support
   - [x] 2.3 Create `source/lambda/shared/requirements.txt` for layer dependencies
   - [x] 2.4 Create `source/lambda/shared/setup.py` for layer packaging
-  - [ ] 2.5 Create `source/lambda/shared/pyproject.toml` for build configuration *(not implemented)*
+  - [x] 2.5 Create `source/lambda/shared/pyproject.toml` for build configuration *(PR #28)*
 
 ## Phase 2: Lambda Layer Implementation
 
@@ -180,7 +180,7 @@ This document provides an ordered list of implementation tasks to recreate the A
 
 | Phase | Tasks | Status | Notes |
 |-------|-------|--------|-------|
-| 1 | 1-2 | ✅ Complete | Missing pyproject.toml |
+| 1 | 1-2 | ✅ Complete | |
 | 2 | 3-5 | ✅ Complete | |
 | 3 | 6-7 | ✅ Complete | |
 | 4 | 8-10 | ✅ Complete | 12 tests passing |
@@ -189,8 +189,7 @@ This document provides an ordered list of implementation tasks to recreate the A
 | 7 | 21 | ✅ Complete | |
 
 **Status:** ✅ Complete (documents existing implementation)
-**Completed:** 93/94 sub-tasks (99%)
-**Not Implemented:** 1 sub-task (pyproject.toml)
+**Completed:** 94/94 sub-tasks (100%)
 
 ## Related Specs
 
