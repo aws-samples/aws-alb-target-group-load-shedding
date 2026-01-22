@@ -4,6 +4,12 @@ This Github repository is created to provide the sample source for the AWS blog 
 
 In this blog post we discuss the Application Load Balancer Target Group Load Shedding (ALB TGLS) Solution, when it's appropriate, and how to deploy the solution into your own AWS Account using the AWS Cloud Development Kit template.
 
+
+## Prerequisites
+
+- Python 3.13 or later
+- AWS CDK installed and configured
+- Application Load Balancer with weighted target group routing
 # Architecture
 
 ![ALB TGLS Simplified - Numbered](https://user-images.githubusercontent.com/33617809/124167984-278ef180-da6a-11eb-88b0-3e2f30abafbc.png)

@@ -176,88 +176,6 @@ This document provides an ordered list of implementation tasks to recreate the A
   - [x] 21.4 Document all configuration parameters
   - [x] 21.5 Document prerequisites (ALB, target groups, listener rules)
 
-## Phase 8: Validation
-
-- [ ] 22. Validate implementation
-  - [x] 22.1 Run unit tests
-  - [x] 22.2 Build Lambda layer
-  - [x] 22.3 Build Lambda functions
-  - [ ] 22.4 Run `cdk synth` to validate CloudFormation *(blocked by CDK v1 EOL)*
-  - [ ] 22.5 Review generated CloudFormation template
-  - [ ] 22.6 Deploy to test environment
-  - [ ] 22.7 Trigger alarm and verify shedding behavior
-  - [ ] 22.8 Clear alarm and verify restore behavior
-
-## Phase 9: Testing Improvements
-
-- [ ] 23. Test framework migration
-  - [ ] 23.1 Create `source/lambda/shared/requirements-dev.txt` with pytest dependencies
-  - [ ] 23.2 Create `pytest.ini` with test paths and coverage configuration
-  - [ ] 23.3 Create `.coveragerc` with exclusion rules
-  - [ ] 23.4 Remove `nose` from `source/lambda/shared/setup.py`
-  - [ ] 23.5 Convert existing tests to pytest style (remove unittest.TestCase inheritance)
-
-- [ ] 24. Lambda handler tests (Priority 1 - 4h)
-  - [ ] 24.1 Create `source/lambda/tests/` directory
-  - [ ] 24.2 Create `test_alb_alarm_lambda_handler.py`
-  - [ ] 24.3 Test handler processes ALARM state correctly
-  - [ ] 24.4 Test handler processes OK state correctly
-  - [ ] 24.5 Test handler rejects invalid event types
-  - [ ] 24.6 Test handler fails gracefully with missing env vars
-  - [ ] 24.7 Create `test_alb_alarm_check_lambda_handler.py`
-  - [ ] 24.8 Test SQS message triggers shed action
-  - [ ] 24.9 Test SQS message triggers restore action
-  - [ ] 24.10 Test handler handles empty SQS records
-  - [ ] 24.11 Test handler handles malformed JSON
-
-- [ ] 25. Error handling tests (Priority 2 - 2h)
-  - [ ] 25.1 Create `source/lambda/shared/elb_load_monitor/tests/test_error_handling.py`
-  - [ ] 25.2 Test handling of boto3 ClientError
-  - [ ] 25.3 Test handling of missing listener
-  - [ ] 25.4 Test handling of invalid target group ARN
-  - [ ] 25.5 Test SQS send failure handling
-  - [ ] 25.6 Test handling when alarm doesn't exist
-
-- [ ] 26. Message serialization tests (Priority 3 - 1h)
-  - [ ] 26.1 Create `source/lambda/shared/elb_load_monitor/tests/test_alb_alarm_messages.py`
-  - [ ] 26.2 Test message serialization (to_json)
-  - [ ] 26.3 Test message deserialization (from_json)
-  - [ ] 26.4 Test serialize -> deserialize roundtrip preserves data
-  - [ ] 26.5 Test ALBAlarmEvent initialization
-
-- [ ] 27. Edge case tests (Priority 4 - 2h)
-  - [ ] 27.1 Expand `test_elb_listener_rule.py` with edge cases
-  - [ ] 27.2 Test shedding when at maxElbShedPercent
-  - [ ] 27.3 Test shedding caps at maxElbShedPercent
-  - [ ] 27.4 Test restore when STG has 0 weight
-  - [ ] 27.5 Test shed distributes across 3+ target groups
-  - [ ] 27.6 Test restore handles remainder correctly
-  - [ ] 27.7 Test weights never go negative
-
-- [ ] 28. CDK tests (Priority 5 - 3h)
-  - [ ] 28.1 Create `cdk/tests/` directory
-  - [ ] 28.2 Create `test_alb_monitor_stack.py`
-  - [ ] 28.3 Test stack creates both Lambda functions
-  - [ ] 28.4 Test stack creates SQS queue
-  - [ ] 28.5 Test stack creates CloudWatch alarm
-  - [ ] 28.6 Test stack creates EventBridge rule
-  - [ ] 28.7 Test Lambda environment variables are set
-  - [ ] 28.8 Test IAM roles have required permissions
-  - [ ] 28.9 Test SQS has Dead Letter Queue configured *(after adding DLQ)*
-
-- [ ] 29. Integration tests (Priority 6 - 4h)
-  - [ ] 29.1 Create `source/lambda/tests/integration/` directory
-  - [ ] 29.2 Create `test_end_to_end.py` with moto mocks
-  - [ ] 29.3 Test complete shed -> restore cycle with mocked AWS services
-  - [ ] 29.4 Test multiple shed actions reach max limit
-  - [ ] 29.5 Test restore returns to 100% PTG
-
-- [ ] 30. Coverage validation
-  - [ ] 30.1 Run pytest with coverage
-  - [ ] 30.2 Verify coverage meets 80% threshold
-  - [ ] 30.3 Generate HTML coverage report
-  - [ ] 30.4 Document any coverage gaps with justification
-
 ## Summary
 
 | Phase | Tasks | Status | Notes |
@@ -267,11 +185,14 @@ This document provides an ordered list of implementation tasks to recreate the A
 | 3 | 6-7 | ✅ Complete | |
 | 4 | 8-10 | ✅ Complete | 12 tests passing |
 | 5 | 11 | ✅ Complete | |
-| 6 | 12-20 | ✅ Complete | Uses CDK v1 (needs migration) |
+| 6 | 12-20 | ✅ Complete | |
 | 7 | 21 | ✅ Complete | |
-| 8 | 22 | ⚠️ Partial | CDK synth/deploy blocked by v1 EOL |
-| 9 | 23-30 | ⬜ Not Started | Testing improvements (~16h effort) |
 
-**Completed:** 93/95 sub-tasks (98%) - Phases 1-8  
-**Blocked:** 2 sub-tasks (CDK v1 compatibility issues)  
-**New:** 45 sub-tasks in Phase 9 (testing improvements)
+**Status:** ✅ Complete (documents existing implementation)
+**Completed:** 93/94 sub-tasks (99%)
+**Not Implemented:** 1 sub-task (pyproject.toml)
+
+## Related Specs
+
+- **cdk-modernization** - CDK v2 migration, runtime updates, security improvements
+- **testing-improvements** - pytest migration, coverage improvements

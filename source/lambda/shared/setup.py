@@ -18,7 +18,7 @@ setuptools.setup(
     install_requires=[
         'boto3', 'botocore'
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.13",
     classifiers=[
         "Development Status :: 4 - Beta",
 
@@ -26,8 +26,7 @@ setuptools.setup(
 
         "Programming Language :: JavaScript",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.13",
 
         "Typing :: Typed",
     ],

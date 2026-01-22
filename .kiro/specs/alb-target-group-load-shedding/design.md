@@ -469,56 +469,10 @@ cdk deploy ALBMonitorStack \
 4. STG has capacity to handle shed traffic
 5. Network connectivity between Lambda and AWS APIs
 
-## 11. Technical Debt & Modernization Required
+## 11. Related Specs
 
-**Review Date:** January 2025
-
-### 11.1 Critical Issues (Must Fix)
-
-| Issue | Current State | Required State | Impact |
-|-------|---------------|----------------|--------|
-| AWS CDK v1 EOL | `aws-cdk.aws-*>=1.107` | `aws-cdk-lib>=2.0.0` | Security vulnerabilities, no support |
-| Lambda Runtime | Python 3.8 | Python 3.12+ | Deprecated runtime, no patches |
-| boto3/botocore | 1.16.29/1.19.29 (Dec 2020) | 1.34.0+ | Missing 4 years of updates |
-| constructs | 3.3.75 | 10.0.0+ | CDK v1 dependency |
-
-### 11.2 High Priority Issues
-
-| Issue | Location | Recommendation |
-|-------|----------|----------------|
-| Deprecated feature flags | `cdk/cdk.json` | Remove all v1 flags (active by default in v2) |
-| Overly permissive IAM | `alb_monitor_stack.py` | Replace `ElasticLoadBalancingFullAccess` with specific permissions |
-| No Dead Letter Queue | SQS Queue | Add DLQ with 14-day retention |
-| No Lambda timeout | Lambda functions | Add 30-second timeout |
-
-### 11.3 Medium Priority Issues
-
-| Issue | Location | Recommendation |
-|-------|----------|----------------|
-| Deprecated test framework | `setup.py` | Replace `nose` with `pytest` |
-| Missing type hints | All Python files | Add type annotations |
-| Hardcoded function names | `alb_monitor_stack.py` | Use stack-prefixed names |
-| Outdated packages | `requirements.txt` | Remove unused CDK v1 deps (jsii, six) |
-
-### 11.4 Low Priority Issues
-
-| Issue | Location | Recommendation |
-|-------|----------|----------------|
-| `logger.warn` deprecated | `alb_listener_rules_handler.py` | Use `logger.warning` |
-| String concatenation in logs | Multiple files | Use parameterized logging |
-| Unused import | `elb_listener_rule.py` | Remove `from re import S` |
-| Empty `__init__.py` | `elb_load_monitor/__init__.py` | Add `__all__` exports |
-
-### 11.5 Migration Effort Estimate
-
-| Phase | Effort | Risk |
-|-------|--------|------|
-| CDK v2 Migration | 4-8 hours | Medium |
-| Runtime Update | 1-2 hours | Low |
-| Dependency Updates | 2-4 hours | Medium |
-| Security Improvements | 2-4 hours | Low |
-| Code Quality | 4-6 hours | Low |
-| **Total** | **13-24 hours** | |
+- **cdk-modernization** - CDK v2 migration, runtime updates, security improvements (see Section 11 for technical debt details)
+- **testing-improvements** - pytest migration, coverage improvements
 
 ## 12. Future Considerations
 

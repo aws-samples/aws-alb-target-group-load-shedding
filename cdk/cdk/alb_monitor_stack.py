@@ -124,7 +124,7 @@ class ALBMonitorStack(cdk.Stack):
             description='ALBMonitoring Layer',
             layer_version_name='ALBMonitorLayer',
             compatible_runtimes=[
-                aws_lambda.Runtime.PYTHON_3_7, aws_lambda.Runtime.PYTHON_3_8
+                aws_lambda.Runtime.PYTHON_3_13
             ],
             code=layer_code)
 
@@ -140,7 +140,7 @@ class ALBMonitorStack(cdk.Stack):
             code=alarm_lambda_code, 
             handler='alb_alarm_lambda_handler.lambda_handler',
             function_name='ALBAlarmLambda',
-            runtime=aws_lambda.Runtime.PYTHON_3_8, description='Lambda Handler for ALB Alarms',
+            runtime=aws_lambda.Runtime.PYTHON_3_13, description='Lambda Handler for ALB Alarms',
             environment={
                 'ELB_ARN': elb_arn_parameter.value_as_string,
                 'ELB_LISTENER_ARN': elb_listener_arn_parameter.value_as_string,
@@ -203,7 +203,7 @@ class ALBMonitorStack(cdk.Stack):
             code=alb_sqs_message_lambda_code, 
             handler='alb_alarm_check_lambda_handler.lambda_handler',
             function_name='ALBSQSMessageLambda',
-            runtime=aws_lambda.Runtime.PYTHON_3_8, 
+            runtime=aws_lambda.Runtime.PYTHON_3_13, 
             description='Lambda Handler for SQS Messages from ALB Monitor',
             layers=[elb_monitor_layer], 
             memory_size=128,
