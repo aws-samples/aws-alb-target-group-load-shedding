@@ -3,6 +3,8 @@
 
 This is the Python CDK for the ALB Target Group Load Shedding project. Please consult the AWS CDK documentation on how to configure the CDK.
 
+\n**Requirements:** Python 3.13 or later
+
 As a prerequisite, you must:
 1. Have Application Load Balancers with appropriate Target Groups in your AWS environment. For guidance follow [these steps](https://aws.amazon.com/premiumsupport/knowledge-center/elb-make-weighted-target-groups-for-alb/).
 2. ALB listener weighted rules to be configured with 100 weight to Primary Target Group and 0 weight to Shedding Target Group.
