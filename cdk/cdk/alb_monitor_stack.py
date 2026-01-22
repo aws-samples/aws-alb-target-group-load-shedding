@@ -107,9 +107,9 @@ class ALBMonitorStack(cdk.Stack):
                     self, id='elb_full',
                     managed_policy_arn='arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess')
             ],
-            inline_policies=[
-                aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
-                aws_iam.PolicyDocument.from_json(inline_policy_json_logs)]
+            inline_policies={
+                "sqs": aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
+                                "logs": aws_iam.PolicyDocument.from_json(inline_policy_json_logs)}
         )
 
 
@@ -187,9 +187,9 @@ class ALBMonitorStack(cdk.Stack):
                     self, id='elb_full2',
                     managed_policy_arn='arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess')
             ],
-            inline_policies=[
-                aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
-                aws_iam.PolicyDocument.from_json(inline_policy_json_logs)]
+            inline_policies={
+                "sqs": aws_iam.PolicyDocument.from_json(inline_policy_json_sqs),
+                                "logs": aws_iam.PolicyDocument.from_json(inline_policy_json_logs)}
         )
 
         # The code for the ALB Alarm Check Queue Lambda
