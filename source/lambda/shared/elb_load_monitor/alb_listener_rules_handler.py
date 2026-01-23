@@ -30,6 +30,7 @@ class ALBListenerRulesHandler:
         self.shed_mesg_delay_sec = shed_mesg_delay_sec
         self.restore_mesg_delay_sec = restore_mesg_delay_sec
 
+        self.elb_rules = []
         try:
             describe_rules_response = elbv2_client.describe_rules(
                 ListenerArn=elb_listener_arn
@@ -39,7 +40,6 @@ class ALBListenerRulesHandler:
                          ': ' + json.dumps(describe_rules_response, default=util.datetime_handler))
 
             elb_rules_entries = describe_rules_response['Rules']
-            self.elb_rules = []
 
             for elb_rule_entry in elb_rules_entries:
                 default_rule = False
@@ -67,9 +67,9 @@ class ALBListenerRulesHandler:
                 for target_group in rule_actions[0]['ForwardConfig']['TargetGroups']:
                     elb_listener_rule.add_forward_config(
                         target_group['TargetGroupArn'], target_group['Weight'])
-        except boto3.ElasticLoadBalancingv2.Client.exceptions.ListenerNotFoundException:
+        except Exception as e:
             logger.error(
-                'No listener found for listener ARN: ' + elb_listener_arn)
+                f'Error describing rules for listener ARN {elb_listener_arn}: {str(e)}')
 
         return
 

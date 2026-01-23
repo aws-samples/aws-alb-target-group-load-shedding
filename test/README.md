@@ -1,6 +1,21 @@
 # Testing Infrastructure
 
-This directory contains CloudFormation templates and scripts for testing the ALB Target Group Load Shedding solution.
+This directory contains infrastructure and procedures for **integration testing** the ALB Target Group Load Shedding solution with real AWS resources.
+
+## Integration Testing vs Unit Testing
+
+**Unit Tests** (`source/lambda/shared/elb_load_monitor/tests/`, `source/lambda/tests/`, `cdk/test_cdk/`):
+- Test isolated components with mocks
+- Fast execution (seconds)
+- 98% code coverage
+- Run automatically via pytest
+
+**Integration Tests** (this directory):
+- Test complete system with REAL AWS resources
+- Deploy actual ALB, Lambda, SQS, CloudWatch
+- Validate end-to-end functionality
+- Manual execution with real AWS costs
+- Validates the system works in production-like environment
 
 ## Prerequisites
 
