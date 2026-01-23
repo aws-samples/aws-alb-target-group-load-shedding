@@ -1,7 +1,7 @@
 {
     "Rules": [
         {
-            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/9758a586f4921acf",
+            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/9758a586f4921acf",
             "Priority": "1",
             "Conditions": [
                 {
@@ -22,11 +22,11 @@
                     "ForwardConfig": {
                         "TargetGroups": [
                             {
-                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/TestGroup/1566e30628006197",
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/TestGroup/1566e30628006197",
                                 "Weight": 0
                             },
                             {
-                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/AppServerATG/090a4ba28ada9d48",
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/AppServerATG/090a4ba28ada9d48",
                                 "Weight": 100
                             }
                         ],
@@ -39,7 +39,7 @@
             "IsDefault": false
         },
         {
-            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/51558e3cbb5f8612",
+            "RuleArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/51558e3cbb5f8612",
             "Priority": "default",
             "Conditions": [],
             "Actions": [
@@ -49,11 +49,11 @@
                     "ForwardConfig": {
                         "TargetGroups": [
                             {
-                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/TestGroup/1566e30628006197",
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/TestGroup/1566e30628006197",
                                 "Weight": 0
                             },
                             {
-                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/AppServerATG/090a4ba28ada9d48",
+                                "TargetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/AppServerATG/090a4ba28ada9d48",
                                 "Weight": 100
                             }
                         ],

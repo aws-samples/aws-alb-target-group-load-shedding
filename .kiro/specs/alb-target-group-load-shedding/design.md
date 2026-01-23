@@ -258,7 +258,7 @@ Current State: forward_configs[target_group_arn] = weight
   "id": "event-id",
   "detail-type": "CloudWatch Alarm State Change",
   "source": "aws.cloudwatch",
-  "account": "123456789012",
+  "account": "YOUR_ACCOUNT_ID_HERE",
   "region": "us-east-1",
   "resources": ["arn:aws:cloudwatch:...alarm:ALBTargetGroupAlarm"],
   "detail": {

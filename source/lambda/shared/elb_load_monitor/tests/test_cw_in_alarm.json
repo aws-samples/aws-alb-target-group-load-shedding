@@ -3,12 +3,12 @@
 	"MetricAlarms": [
 		{
 			"AlarmName": "ALB_test",
-			"AlarmArn": "arn:aws:cloudwatch:us-east-1:817387504538:alarm:ALB_test",
+			"AlarmArn": "arn:aws:cloudwatch:us-east-1:YOUR_ACCOUNT_ID_HERE:alarm:ALB_test",
 			"AlarmConfigurationUpdatedTimestamp": "2021-05-20T21:35:07.365000+00:00",
 			"ActionsEnabled": true,
 			"OKActions": [],
 			"AlarmActions": [
-				"arn:aws:sns:us-east-1:817387504538:alb_target_request_alarm"
+				"arn:aws:sns:us-east-1:YOUR_ACCOUNT_ID_HERE:alb_target_request_alarm"
 			],
 			"InsufficientDataActions": [],
 			"StateValue": "ALARM",

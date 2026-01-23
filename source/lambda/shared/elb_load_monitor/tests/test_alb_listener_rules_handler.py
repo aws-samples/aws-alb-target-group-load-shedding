@@ -40,13 +40,13 @@ class TestALBListenerRulesHandler(unittest.TestCase):
 
         cw_ok_json.close()
 
-        self.cw_alarm_arn = 'arn:aws:cloudwatch:us-east-1:817387504538:alarm:ALB_test'
+        self.cw_alarm_arn = 'arn:aws:cloudwatch:us-east-1:YOUR_ACCOUNT_ID_HERE:alarm:ALB_test'
         self.cw_alarm_name = 'ALB_test'
-        self.load_balancer_arn = 'arn:aws:elasticloadbalancing:us-east-1:817387504538:loadbalancer/app/AgentPortalALB/bb6bb42b08f94c0b'
-        self.elb_listener_arn = 'arn:aws:elasticloadbalancing:us-east-1:817387504538:listener/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696'
-        self.elb_listener_rule_arn = 'arn:aws:elasticloadbalancing:us-east-1:817387504538:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/9758a586f4921acf'
-        self.target_group_arn = 'arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/AppServerATG/090a4ba28ada9d48'
-        self.secondary_target_group_arn = 'arn:aws:elasticloadbalancing:us-east-1:817387504538:targetgroup/TestGroup/1566e30628006197'
+        self.load_balancer_arn = 'arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:loadbalancer/app/AgentPortalALB/bb6bb42b08f94c0b'
+        self.elb_listener_arn = 'arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:listener/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696'
+        self.elb_listener_rule_arn = 'arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:listener-rule/app/AgentPortalALB/bb6bb42b08f94c0b/b3784a6b090b3696/9758a586f4921acf'
+        self.target_group_arn = 'arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/AppServerATG/090a4ba28ada9d48'
+        self.secondary_target_group_arn = 'arn:aws:elasticloadbalancing:us-east-1:YOUR_ACCOUNT_ID_HERE:targetgroup/TestGroup/1566e30628006197'
         self.elb_shed_percent = 20
         self.max_elb_shed_percent = 100
         self.elb_restore_percent = 10
