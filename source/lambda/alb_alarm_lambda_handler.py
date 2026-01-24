@@ -11,21 +11,34 @@ import os
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-elbv2_client = boto3.client('elbv2')
-sqs_client = boto3.client('sqs')
 
-load_balancer_arn = os.environ.get('ELB_ARN')
-elb_listener_arn = os.environ.get('ELB_LISTENER_ARN')
-sqs_queue_url = os.environ.get('SQS_QUEUE_URL')
-elb_shed_percent = int(os.getenv('ELB_SHED_PERCENT', 5))
-max_elb_shed_percent = int(os.getenv('MAX_ELB_SHED_PERCENT', 100))
-elb_restore_percent = int(os.getenv('ELB_RESTORE_PERCENT', 5))
-shed_mesg_delay_sec = int(os.getenv('SHED_MESG_DELAY_SEC', 60))
-restore_mesg_delay_sec = int(os.getenv('RESTORE_MESG_DELAY_SEC', 60))
-
-
-def lambda_handler(event, context):
+def lambda_handler(event, context, elbv2_client=None, sqs_client=None):
+    """
+    Lambda handler for ALB alarm events.
+    
+    Args:
+        event: EventBridge event
+        context: Lambda context
+        elbv2_client: Optional boto3 ELB client (for testing)
+        sqs_client: Optional boto3 SQS client (for testing)
+    """
     logger.info(json.dumps(event))
+
+    # Initialize clients if not provided (for testing)
+    if elbv2_client is None:
+        elbv2_client = boto3.client('elbv2')
+    if sqs_client is None:
+        sqs_client = boto3.client('sqs')
+
+    # Load environment variables
+    load_balancer_arn = os.environ.get('ELB_ARN')
+    elb_listener_arn = os.environ.get('ELB_LISTENER_ARN')
+    sqs_queue_url = os.environ.get('SQS_QUEUE_URL')
+    elb_shed_percent = int(os.getenv('ELB_SHED_PERCENT', 5))
+    max_elb_shed_percent = int(os.getenv('MAX_ELB_SHED_PERCENT', 100))
+    elb_restore_percent = int(os.getenv('ELB_RESTORE_PERCENT', 5))
+    shed_mesg_delay_sec = int(os.getenv('SHED_MESG_DELAY_SEC', 60))
+    restore_mesg_delay_sec = int(os.getenv('RESTORE_MESG_DELAY_SEC', 60))
 
     event_type = event['detail-type']
     if event_type == 'Cloudwatch Alarm State Change':

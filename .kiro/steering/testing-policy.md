@@ -6,6 +6,15 @@ inclusion: always
 
 ## Mandatory Requirements
 
+### Commit Approval
+
+**All commits MUST be approved by the user before execution:**
+
+1. **No Auto-Commits** - Never commit without explicit user approval
+2. **Present Changes** - Show what will be committed (git diff, status)
+3. **Wait for Approval** - User must say "commit" or "go ahead"
+4. **No Assumptions** - Don't assume user wants to commit after completing work
+
 ### Test Coverage Requirements
 
 **Every code modification MUST include adequate unit test coverage:**

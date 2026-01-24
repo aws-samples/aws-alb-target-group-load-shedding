@@ -134,3 +134,6 @@ dmypy.json
 
 # Scratch folder
 scratch/
+COVERAGE.md
+htmlcov/
+.coverage

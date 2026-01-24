@@ -10,13 +10,27 @@ from elb_load_monitor import util
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-elbv2_client = boto3.client('elbv2')
-sqs_client = boto3.client('sqs')
-cw_client = boto3.client('cloudwatch')
 
-
-def lambda_handler(event, context):
+def lambda_handler(event, context, elbv2_client=None, sqs_client=None, cw_client=None):
+    """
+    Lambda handler for SQS messages.
+    
+    Args:
+        event: SQS event
+        context: Lambda context
+        elbv2_client: Optional boto3 ELB client (for testing)
+        sqs_client: Optional boto3 SQS client (for testing)
+        cw_client: Optional boto3 CloudWatch client (for testing)
+    """
     logger.info(json.dumps(event, default=util.datetime_handler))
+
+    # Initialize clients if not provided (for testing)
+    if elbv2_client is None:
+        elbv2_client = boto3.client('elbv2')
+    if sqs_client is None:
+        sqs_client = boto3.client('sqs')
+    if cw_client is None:
+        cw_client = boto3.client('cloudwatch')
 
     if len(event['Records']) == 0:
         logger.warning('No SQS message: ')

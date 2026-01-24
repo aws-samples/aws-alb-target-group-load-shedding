@@ -30,7 +30,5 @@ setuptools.setup(
 
         "Typing :: Typed",
     ],
-    test_suite='nose.collector',
-    tests_require=['nose'],
     zip_safe=True
 )
