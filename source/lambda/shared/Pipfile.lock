@@ -18,21 +18,21 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:5da0d35dd82451d4520af63f8fcc722537597d7c790035e8b3a8fc53f032be3a",
-                "sha256:81db4a1ef08b3a69b2c5a879e7bd26ee43ca3fd5202cd320a2aaa4f5dd11182c"
+                "sha256:4db50b8b39321fab87ff7f40ab407887d436d004c1f2b0dfdf56e42b4884709b",
+                "sha256:5074e074a718a6f3c2b519cbb9ceab258f17b331a143d23351d487984f2a412f"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.42.33"
+            "version": "==1.42.45"
         },
         "botocore": {
             "hashes": [
-                "sha256:156a1ead55c38709730c543eb8085c36098b7baf272fedc67cc4a543ae4b4cf6",
-                "sha256:ecf48db73605a592b6c7f8f29e517d9eb6cf0c7e004a1fdbd9c192afc7b42b03"
+                "sha256:40b577d07b91a0ed26879da9e4658d82d3a400382446af1014d6ad3957497545",
+                "sha256:a5ea5d1b7c46c2d5d113879e45b21eaf7d60dc865f4bcb46dfcf0703fe3429f4"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.42.33"
+            "version": "==1.42.45"
         },
         "elbloadmonitor": {
             "editable": true,
