@@ -27,12 +27,12 @@
         },
         "botocore": {
             "hashes": [
-                "sha256:156a1ead55c38709730c543eb8085c36098b7baf272fedc67cc4a543ae4b4cf6",
-                "sha256:ecf48db73605a592b6c7f8f29e517d9eb6cf0c7e004a1fdbd9c192afc7b42b03"
+                "sha256:3ec7004009d1557a881b1d076d54b5768230849fa9ccdebfd409f0571490e691",
+                "sha256:de1e128e4898f4e66877bfabbbb03c61f99366f27520442539339e8a74afe3a5"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.42.33"
+            "version": "==1.42.50"
         },
         "elbloadmonitor": {
             "editable": true,
