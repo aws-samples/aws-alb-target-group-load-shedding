@@ -67,12 +67,12 @@
         },
         "constructs": {
             "hashes": [
-                "sha256:e63d6675ba2e8a9076db8df1d4c7af78efdb96182ba28abe938384ba321e4b81",
-                "sha256:efa0f9e4fe65bd334bad719d00e0c8d9e3e4c6d873da8e874e67517a029c190b"
+                "sha256:ad4ffabdb53c17cde00fb94e441a1ba9fddac57c92ad49d263f8dbd416cec513",
+                "sha256:bc55d1d390142424861e5ff5c6b8c243c4bae18fe7302e0939c2003f329ba365"
             ],
             "index": "pypi",
             "markers": "python_version ~= '3.9'",
-            "version": "==10.4.5"
+            "version": "==10.6.0"
         },
         "importlib-resources": {
             "hashes": [
@@ -84,11 +84,11 @@
         },
         "jsii": {
             "hashes": [
-                "sha256:37664c25ac8dfaf6c1bab214ff58eec62d515e70311c349240b43bdd733beccb",
-                "sha256:895b1f27f67e1fac3797abeeeb0ded0e1a64a155a32e1547174735d293eca0cb"
+                "sha256:631a13d73265eaa22c0c0804e77fe59c8fcc3af3a94de9923af65380b6ad267a",
+                "sha256:92a11f39e461f5168e2467efd53351cc32b118314b95cc6323c2d044eb299eaf"
             ],
             "markers": "python_version ~= '3.9'",
-            "version": "==1.125.0"
+            "version": "==1.127.0"
         },
         "publication": {
             "hashes": [
